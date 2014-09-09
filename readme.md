@@ -15,7 +15,7 @@ Unlike BallotDrop.org - which gets its data from file that's saved on the server
 Better Ballot Drop contains two components:
 
  * A javascript widget for displaying voting locations on a Google Map that are stored in a Google Spreadsheet - the data displayed is what's live in the spreadsheet
- * A generator script for creating and configuring that map for future elections
+ * A generator script for creating and configuring that map for future elections. The generator will be available as website or as a php command line script
 
 It also contains some extra features beyond BallotDrop.org *including*
 
