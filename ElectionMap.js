@@ -44,7 +44,7 @@ function ElectionMap(element, options) {
         this.create_projection()
 
         $.getJSON(
-            this.config.url+'?alt=json-in-script&callback=?',
+            config.url+'?alt=json-in-script&callback=?',
             function(response) {
                 var entries = response.feed.entry;
                 for( var i=0; i < entries.length - 1; i++ ) {
