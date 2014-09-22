@@ -291,7 +291,7 @@ function ElectionMap(element, options) {
         }
 
         var point_type = election_map.point_types[this.type]
-        this.long_name = point_type.long_name
+        this.long_title = point_type.long_title
         this.icon = point_type.icon
         this.zIndex = Boolean(this.default) ? 5 : 3
         this.directions = 'https://maps.google.com/?q=from:'+[this.address,this.city,this.zip].join(' ')
@@ -407,7 +407,7 @@ function ElectionMap(element, options) {
                     hours = $('<p>')
 
                 title.text(this.location)
-                type.text(this.type)
+                type.text(this.long_title)
                 address.text([this.address,this.city].join(', '))
                 hours.html(this.fixed_hours())
 
