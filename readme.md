@@ -37,4 +37,4 @@ As you can see this is all just a bunch of mismash - but what's in the pipeline?
  * Shouldn't require pregenerating the lat/lngs... somehow
  * Tests! What you shut up
  * Better date filtering... this one is v vague. Maybe an Open Now button like on Yelp?
-
+ * Other language support: format_week function override, date works better
