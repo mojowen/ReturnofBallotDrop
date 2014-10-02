@@ -38,3 +38,4 @@ As you can see this is all just a bunch of mismash - but what's in the pipeline?
  * Tests! What you shut up
  * Better date filtering... this one is v vague. Maybe an Open Now button like on Yelp?
  * Other language support: format_week function override, date works better
+ * [AUTOMATICALLY GEOCODE THINGS CAUSE THE CENSUS CAN DO THAT FOR FREE WITH BATCHES](http://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.pdf)
