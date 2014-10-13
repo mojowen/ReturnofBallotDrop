@@ -325,7 +325,7 @@ function ElectionMap(element, options) {
             var today = new Date()
             for (var i = 0; i < election_map.date_filters.length; i++) {
                 if( today > election_map.date_filters[i].date )
-                    return this.closed_week(election_map.date_filters[i].title)
+                    return this.closed_week(election_map.date_filters[i].label)
             };
         }
         this.closed_week = function(title) {
