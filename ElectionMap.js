@@ -329,7 +329,7 @@ function ElectionMap(element, options) {
             };
         }
         this.closed_week = function(title) {
-            return election_map.closed_states.indexOf(this[title].toLowerCase()) !== -1
+            return election_map.closed_states.indexOf(this[title].toLowerCase()) === -1
         }
         this.format_week = function(date_filter) {
             if( this[date_filter.label].length < 1 ) return ''
