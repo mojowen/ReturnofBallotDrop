@@ -294,7 +294,7 @@ function ElectionMap(element, options) {
         this.long_title = point_type.long_title
         this.icon = point_type.icon
         this.zIndex = Boolean(this.default) ? 5 : 3
-        this.directions = 'https://maps.google.com/?q=from:'+[this.address,this.city,this.zip].join(' ')
+        this.directions = 'https://www.google.com/maps/dir//'+[this.address,this.city,this.zip].join(' ')
 
         this.tool_tip = false
 
