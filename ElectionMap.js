@@ -47,7 +47,7 @@ function ElectionMap(element, options) {
             config.url+'?alt=json-in-script&callback=?',
             function(response) {
                 var entries = response.feed.entry;
-                for( var i=0; i < entries.length - 1; i++ ) {
+                for( var i=0; i < entries.length; i++ ) {
                     var point = new Point(entries[i], self);
                     if( !!! point.errored ) self.locations.push(point);
                 }
@@ -329,7 +329,7 @@ function ElectionMap(element, options) {
             };
         }
         this.closed_week = function(title) {
-            return election_map.closed_states.indexOf(this[title].toLowerCase()) === -1
+            return election_map.closed_states.indexOf((this[title] || '').toLowerCase()) === -1
         }
         this.format_week = function(date_filter) {
             if( this[date_filter.label].length < 1 ) return ''
