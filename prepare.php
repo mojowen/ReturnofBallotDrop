@@ -85,7 +85,6 @@ function analyze_sheet($sheet_key, $sheet_id=null) {
     usort($states, 'innactive_at_the_top');
 
     return Array(
-        'dates' => $dates,
         'types' => $types,
         'states' => $states,
         'url' => ('https://spreadsheets.google.com/feeds/list/'.$sheet_key.'/'.
