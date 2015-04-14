@@ -49,6 +49,7 @@ function ElectionMap(element, options) {
                 entries = response.feed.entry;
                 for( var i=0; i < entries.length; i++ ) {
                     var point = new Point(entries[i], self);
+                    if( i == 0 ) self.create_date_filters(point);
                     if( !!! point.errored ) self.locations.push(point);
                 }
                 self.county_zoom()
@@ -260,14 +261,23 @@ function ElectionMap(element, options) {
         self.init();
     }
 
-    this.date_filters = config.dates
-    for (var i = this.date_filters.length - 1; i >= 0; i--) {
-        this.date_filters[i].date = new Date(parseInt(
-            this.date_filters[i].date)*1000 )
-    };
-    this.date_filters.sort(function(a,b) {
-        return a.date - b.date
-    })
+    this.date_filters = []
+    this.create_date_filters = function(point) {
+        var date_filters = []
+        for( var key in point) {
+            if( key.split('weekof').length > 1 ) {
+                var date_string = key.split('weekof')[1],
+                    month = date_string.split(/\d/)[0],
+                    day = date_string.replace(/\D+/g,''),
+                    year = (new Date()).getFullYear()
+                var date = new Date([day, month, year].join(' '))
+
+                date_filters.push({"date":date, "label":i})
+            }
+        }
+        date_filters.sort(function(a,b) { return a.date - b.date });
+        this.date_filters = date_filters;
+    }
     this.closed_states = config.states || []
 
     function Point(data, election_map) {
@@ -339,7 +349,9 @@ function ElectionMap(element, options) {
             return election_map.closed_states.indexOf((this[title] || '').toLowerCase()) === -1
         }
         this.format_week = function(date_filter) {
-            if( this[date_filter.label].length < 1 ) return ''
+
+            if(typeof this[date_filter.label] === 'undefined' ||
+              this[date_filter.label].length < 1 ) return '';
 
             var day = date_filter.date.getDate()
             var monthNames = ["January",
