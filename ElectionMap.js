@@ -272,7 +272,7 @@ function ElectionMap(element, options) {
                     year = (new Date()).getFullYear()
                 var date = new Date([day, month, year].join(' '))
 
-                date_filters.push({"date":date, "label":i})
+                date_filters.push({"date":date, "label": key})
             }
         }
         date_filters.sort(function(a,b) { return a.date - b.date });
