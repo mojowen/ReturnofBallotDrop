@@ -78,17 +78,6 @@ if( isset($_POST['KEY']) ) {
                 <br />
             <?php endforeach; ?>
 
-            <h4>Points will be filtered based on the following dates:</h4>
-            <?php foreach ($data['dates'] as $key=>$value): ?>
-                <h5><?php echo $value['label']; ?></h5>
-                <input type="hidden"
-                    value="<?php echo $value['date']; ?>"
-                    name="dates[<?php echo $key; ?>][date]">
-                <input type="hidden"
-                    value="<?php echo $value['label']; ?>"
-                    name="dates[<?php echo $key; ?>][label]">
-            <?php endforeach; ?>
-
             <input type="hidden" name="url" value="<?php echo $data['url']; ?>">
             <button type="submit">Finish</button>
         </form>
