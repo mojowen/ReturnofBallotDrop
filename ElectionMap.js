@@ -1,8 +1,8 @@
 function ElectionMap(element, options) {
 
     var options = options || {}
-    var config = options.config || this.__proto__.config || {}
-    var log_errors = this.__proto__.log_errors || false
+    var config = options.config || this.constructor.prototype.config || {}
+    var log_errors = this.constructor.prototype.log_errors || false
 
     this.create_projection = function() {
         var overlay = new google.maps.OverlayView()
@@ -21,7 +21,7 @@ function ElectionMap(element, options) {
 
     this.point_types = {
         __load: function(types) { for( var i in types) this[i] = types[i]; },
-        __default: function() { for( var i in this) { if( i.search('__') === -1 && Boolean(this[i].default) ) return i; } }
+        __default: function() { for( var i in this) { if( i.search('__') === -1 && Boolean(this[i]['default']) ) return i; } }
     }
     this.point_types.__load( options.point_types || default_types );
     this.set_type = options.type || this.point_types.__default() || 'all';
@@ -32,7 +32,7 @@ function ElectionMap(element, options) {
         this.geocoder = new google.maps.Geocoder()
 
         this.map = new google.maps.Map(
-            element.querySelector('#canvas'),
+            canvas,
             {
                 minZoom: 7,
                 zoom: 7,
@@ -46,7 +46,7 @@ function ElectionMap(element, options) {
         $.getJSON(
             config.url+'?alt=json-in-script&callback=?',
             function(response) {
-                var entries = response.feed.entry;
+                entries = response.feed.entry;
                 for( var i=0; i < entries.length; i++ ) {
                     var point = new Point(entries[i], self);
                     if( !!! point.errored ) self.locations.push(point);
@@ -61,8 +61,10 @@ function ElectionMap(element, options) {
                 {'address': $('#address').val()},
                 function(results, status) {
                   if (status == google.maps.GeocoderStatus.OK) {
+
                     self.set_home = results[0].geometry.location;
                     self.active_county = find_county(results[0].address_components)
+                    _gaq.push(['_trackEvent', 'County', this.active_county, 'Search']);
 
                     self.map.setCenter(self.set_home);
                     self.map.setZoom(self.set_zoom);
@@ -75,6 +77,8 @@ function ElectionMap(element, options) {
             function setPosition(position) {
                 self.set_home = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
                 find_county_and_render(self.set_home)
+                _gaq.push(['_trackEvent', 'County', this.active_county, 'Geolocate']);
+
                 self.map.setCenter(self.set_home);
                 self.map.setZoom(self.set_zoom);
             }
@@ -88,6 +92,7 @@ function ElectionMap(element, options) {
         google.maps.event.addListener(this.map, 'idle', function() {
             if (self.map.getZoom() > 9 && ! self.set_county ) {
                 find_county_and_render( self.map.getCenter() )
+                _gaq.push(['_trackEvent', 'County', this.active_county, 'Browse']);
             } else {
                 self.create_projection()
             }
@@ -172,8 +177,8 @@ function ElectionMap(element, options) {
         'kiowa':'38.3769671, -102.7135121',
         'kit carson':'39.3844507, -102.52980279999997',
         'la plata':'37.2125857, -107.763621',
-        'lake county':'39.1941167, -106.29929119999997',
-        'larimer':'40.6955572, -105.5943388',
+        'lake':'39.1941167, -106.29929119999997',
+        'larimer':'40.5566585,-105.067652', //'40.6955572, -105.5943388',
         'las animas':'37.2994909, -104.1001326',
         'lincoln':'39.0457549, -103.3587288',
         'logan':'40.7056181, -102.98961500000001',
@@ -207,6 +212,8 @@ function ElectionMap(element, options) {
         var county = county || this.set_county;
 
         if( ! county || county.length < 1 ) return false;
+
+        _gaq.push(['_trackEvent', 'County', county, 'Select']);
 
         var counter_center =  this.counties[ county ].split(',')
         this.set_county = county
@@ -293,8 +300,8 @@ function ElectionMap(element, options) {
         var point_type = election_map.point_types[this.type]
         this.long_title = point_type.long_title
         this.icon = point_type.icon
-        this.zIndex = Boolean(this.default) ? 5 : 3
-        this.directions = 'https://www.google.com/maps/dir//'+[this.address,this.city,this.zip].join(' ')
+        this.zIndex = Boolean(point_type['default']) ? 5 : 3
+        this.directions = 'https://www.google.com/maps/dir//'+[lat,lng].join(',')
 
         this.tool_tip = false
 
@@ -312,7 +319,7 @@ function ElectionMap(element, options) {
                 point = election_map.projection.fromLatLngToContainerPixel(this.latlng),
                 inner_html = this.location + (show_directions ? '<br/><a href="#">Click for Directions</a>' : '')
 
-            this.tool_tip = $('<span>', {html: inner_html, class: 'tool_tip', style: ['left:', point.x,'px;', 'top:', point.y,'px'].join('') })
+            this.tool_tip = $('<span>', {'html': inner_html, 'class': 'tool_tip', 'style': ['left:', point.x,'px;', 'top:', point.y,'px'].join('') })
             $(election_map.map.getDiv()).append( this.tool_tip )
         }
         this.hoverOut = function() {
@@ -382,6 +389,7 @@ function ElectionMap(element, options) {
                     icon: this.icon,
                     zIndex: this.zIndex
                 })
+                if( $.browser.msie && parseInt($.browser.version) < 9 ) this.marker.opacity = null;
                 google.maps.event.addListener(this.marker, 'click', function() {
                     self_point.click()
                 });
@@ -405,7 +413,6 @@ function ElectionMap(element, options) {
                     type = $('<em>').addClass('type'),
                     address = $('<p>'),
                     hours = $('<p>')
-
                 title.text(this.location)
                 type.text(this.long_title)
                 address.text([this.address,this.city].join(', '))
@@ -434,7 +441,7 @@ function ElectionMap(element, options) {
         };
     }
     function log_error() {
-        if( log_errors ) try { console.log(arguments); } catch(e) { }
+if( log_errors ) try { console.log(arguments); } catch(e) { }
     }
 
 }
