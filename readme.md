@@ -32,7 +32,7 @@ As you can see this is all just a bunch of mismash - but what's in the pipeline?
  * Finish creating / styling the map generator page - so anyone can create a new BallotDrop on their own (and with minimal programming experience)
  * Remove jQuery dependency or automate adding jQuery
  * Build scipt to assemble js and minify.
- * Should dynamocally prepend all Dom elements - county dropdown, search box, map, etc
+ * Should dynamically prepend all Dom elements - county dropdown, search box, map, etc
  * Some simple styling by importing a stylesheet
  * Shouldn't require pregenerating the lat/lngs... somehow
  * Tests! What you shut up
